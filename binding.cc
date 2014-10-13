@@ -23,14 +23,8 @@ Handle<Value> nGamepad_numDevices(const Arguments& args) {
   return Number::New(Gamepad_numDevices());
 }
 
-Handle<Value> nGamepad_deviceAtIndex(const Arguments& args) {
-  HandleScope scope;
-
-  int deviceIndex = args[0]->Int32Value();
-  struct Gamepad_device* device = Gamepad_deviceAtIndex(deviceIndex);
-  printf("device %p\n", device);
-
-  Handle<Object> obj = Object::New();
+Local<Object> nGamepad_toObject(Gamepad_device* device) {
+  Local<Object> obj = Object::New();
   obj->Set(String::NewSymbol("deviceID"), Number::New(device->deviceID));
   obj->Set(String::NewSymbol("description"), String::New(device->description));
   obj->Set(String::NewSymbol("vendorID"), Number::New(device->vendorID));
@@ -45,8 +39,15 @@ Handle<Value> nGamepad_deviceAtIndex(const Arguments& args) {
     buttons->Set(i, Boolean::New(device->buttonStates[i]));
   }
   obj->Set(String::NewSymbol("buttonStates"), buttons);
+  return obj;
+}
 
-  return scope.Close(obj);
+Handle<Value> nGamepad_deviceAtIndex(const Arguments& args) {
+  HandleScope scope;
+  int deviceIndex = args[0]->Int32Value();
+  struct Gamepad_device* device = Gamepad_deviceAtIndex(deviceIndex);
+  if (!device) return Undefined();
+  return scope.Close(nGamepad_toObject(device));
 }
 
 Handle<Value> nGamepad_detectDevices(const Arguments& args) {
@@ -63,15 +64,16 @@ Handle<Value> nGamepad_processEvents(const Arguments& args) {
 
 void nGamepad_deviceAttach_cb(struct Gamepad_device* device, void* context) {
   Local<Value> args[] = {
-    String::NewSymbol("deviceAttach"),
+    String::NewSymbol("attach"),
     Number::New(device->deviceID),
+    nGamepad_toObject(device),
   };
-  node::MakeCallback(context_obj, "on", 2, args);
+  node::MakeCallback(context_obj, "on", 3, args);
 }
 
 void nGamepad_deviceRemove_cb(struct Gamepad_device* device, void* context) {
   Local<Value> args[] = {
-    String::NewSymbol("deviceRemove"),
+    String::NewSymbol("remove"),
     Number::New(device->deviceID),
   };
   node::MakeCallback(context_obj, "on", 2, args);
@@ -79,7 +81,7 @@ void nGamepad_deviceRemove_cb(struct Gamepad_device* device, void* context) {
 
 void nGamepad_buttonDown_cb(struct Gamepad_device* device, unsigned int buttonID, double timestamp, void* context) {
   Local<Value> args[] = {
-    String::NewSymbol("buttonDown"),
+    String::NewSymbol("down"),
     Number::New(device->deviceID),
     Number::New(buttonID),
     Number::New(timestamp),
@@ -89,7 +91,7 @@ void nGamepad_buttonDown_cb(struct Gamepad_device* device, unsigned int buttonID
 
 void nGamepad_buttonUp_cb(struct Gamepad_device* device, unsigned int buttonID, double timestamp, void* context) {
   Local<Value> args[] = {
-    String::NewSymbol("buttonUp"),
+    String::NewSymbol("up"),
     Number::New(device->deviceID),
     Number::New(buttonID),
     Number::New(timestamp),
@@ -99,7 +101,7 @@ void nGamepad_buttonUp_cb(struct Gamepad_device* device, unsigned int buttonID, 
 
 void nGamepad_axisMove_cb(struct Gamepad_device* device, unsigned int axisID, float value, float lastValue, double timestamp, void * context) {
   Local<Value> args[] = {
-    String::NewSymbol("axisMove"),
+    String::NewSymbol("move"),
     Number::New(device->deviceID),
     Number::New(axisID),
     Number::New(value),
@@ -110,7 +112,7 @@ void nGamepad_axisMove_cb(struct Gamepad_device* device, unsigned int axisID, fl
 }
 
 void init(Handle<Object> target) {
-  target->Set(String::New("context"), context_obj);
+  target->Set(String::New("context"), context_obj, DontEnum);
 
   Gamepad_deviceAttachFunc(nGamepad_deviceAttach_cb, NULL);
   Gamepad_deviceRemoveFunc(nGamepad_deviceRemove_cb, NULL);

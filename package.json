@@ -1,8 +1,8 @@
 {
   "name": "gamepad",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "node bindings to the Gamepad library",
-  "main": "build/Release/gamepad.node",
+  "main": "gamepad.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "node-gyp rebuild"
