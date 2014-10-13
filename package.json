@@ -1,6 +1,6 @@
 {
   "name": "gamepad",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "node bindings to the Gamepad library",
   "main": "build/Release/gamepad.node",
   "scripts": {
