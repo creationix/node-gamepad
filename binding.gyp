@@ -12,9 +12,8 @@
       'conditions': [
         ['OS == "linux"', { 'sources': [ '<(gamepad_dir)/Gamepad_linux.c' ]}],
         ['OS == "mac"', { 'sources': [ '<(gamepad_dir)/Gamepad_macosx.c' ]}],
-        ['OS == "windows"', { 'sources': [
+        ['OS == "win"', { 'sources': [
           '<(gamepad_dir)/Gamepad_windows_dinput.c'
-          '<(gamepad_dir)/Gamepad_windows_mm.c'
         ]}]
       ],
       'include_dirs': [
