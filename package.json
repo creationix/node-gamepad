@@ -2,11 +2,14 @@
   "name": "gamepad",
   "version": "0.1.0",
   "description": "node bindings to the Gamepad library",
-  "main": "gamepad.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "node-gyp rebuild"
+  "author": "Tim Caswell <tim@creationix.com>",
+  "license": "MIT",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/creationix/node-gamepad/issues"
   },
+  "homepage": "https://github.com/creationix/node-gamepad",
+  "main": "gamepad.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/creationix/node-gamepad.git"
@@ -15,11 +18,23 @@
     "gamepad",
     "joystick"
   ],
-  "author": "Tim Caswell <tim@creationix.com>",
-  "license": "MIT",
-  "gypfile": true,
-  "bugs": {
-    "url": "https://github.com/creationix/node-gamepad/issues"
+  "scripts": {
+    "build": "node-gyp build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "node-pre-gyp install --fallback-to-build"
   },
-  "homepage": "https://github.com/creationix/node-gamepad"
+ "dependencies": {
+    "node-pre-gyp": "0.5.31"
+  },
+  "devDependencies": {
+    "aws-sdk": "~2.0.21"
+  },
+  "bundledDependencies":["node-pre-gyp"],
+  "binary": {
+    "module_name" : "gamepad",
+    "module_path" : "./build/{module_name}/v{version}/{configuration}/{node_abi}-{platform}-{arch}/",
+    "remote_path" : "./{module_name}/v{version}/{configuration}/",
+    "package_name": "{node_abi}-{platform}-{arch}.tar.gz",
+    "host"        : "https://node-gamepad.s3.amazonaws.com"
+  }
 }
