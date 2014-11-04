@@ -70,3 +70,4 @@ script:
 after_success:
   # if success then query and display all published binaries
   - node-pre-gyp info
+
