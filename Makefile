@@ -8,10 +8,14 @@ default:
 	@echo "If so, run 'make release'."
 
 release:
+	@echo "Creating release commit"
+	@git commit -a -m "Release version $(VERSION) [publish binary]"
+
 	@echo "Tagging release $(VERSION)"
 	@git tag -m "$(VERSION)" v$(VERSION)
 
-	@echo "Pushing tags to GitHub"
+	@echo "Pushing commit and tags to GitHub"
+	@git push
 	@git push --tags
 
 	@echo "Switching to osx-binaries branch"
