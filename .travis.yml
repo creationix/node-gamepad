@@ -1,25 +1,25 @@
-language: node_js
-
-node_js:
-  - '0.10'
-
-compiler: clang
+language: objective-c
+#compiler: clang
 
 env:
+  matrix:
+    - export NODE_VERSION="0.10"
   global:
     - secure: bKQdWZw+dRDWm4A/9mnF8EizAgC6HXdM96TU3w4BtSN9BFAEqgC3bAi8sMWo8bDF6jktDcCxXZQcTqNQa4cw742M6WyU11rb0K1rtopmuifdDdM5hdAr7wX79gwe0uD91MG7Fw3GbYc/LDK2Or6mtX3oAPkQMwqfNwt4IEnZjuo=
     - secure: i+TafxQJP1g96sWkckX/jAKq3ma9k1tFoMSs8CxXhnmadj3MFFVc0kzoZYzpvH1OYxxfnJOv++UcY+hSyiu51hV1QLnksz6xUFiW8CC49ItHxS6gRf9XaofJl3UAhzMTQ8U8eOpeFC4COAIeRo4Z8z/q2qZkd0eB+rAOZPO74mA=
 
 before_install:
+  - git clone https://github.com/creationix/nvm.git ./.nvm
+  - source ./.nvm/nvm.sh
+  - nvm install $NODE_VERSION
+  - nvm use $NODE_VERSION
   # get commit message
   - COMMIT_MESSAGE=$(git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n')
   # put local node-pre-gyp on PATH
   - export PATH=./node_modules/.bin/:$PATH
-    # install node-pre-gyp so it is available for packaging and publishing
+  # put global node-gyp on PATH
   - npm install node-gyp -g
-    # install node-pre-gyp so it is available for packaging and publishing
-  - npm install node-pre-gyp
-  # install aws-sdk so it is available for publishing to AS3
+  # install aws-sdk so it is available for publishing
   - npm install aws-sdk
   # figure out if we should publish
   - PUBLISH_BINARY=false
@@ -28,8 +28,6 @@ before_install:
   # or if we put [publish binary] in the commit message
   - if test "${COMMIT_MESSAGE#*'[publish binary]'}" != "$COMMIT_MESSAGE"; then PUBLISH_BINARY=true; fi;
   - platform=$(uname -s | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/")
-  # Fix a problem with apt-get failing later, see http://docs.travis-ci.com/user/installing-dependencies/#Installing-Ubuntu-packages
-  - sudo apt-get update -qq
 
 install:
   # ensure source install works
@@ -72,4 +70,3 @@ script:
 after_success:
   # if success then query and display all published binaries
   - node-pre-gyp info
-
