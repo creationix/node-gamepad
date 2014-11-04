@@ -7,8 +7,8 @@ compiler: clang
 
 env:
   global:
-    - secure: cLjN/Y+VL/IVd2D7YKMx/MSPmCHATkPBLopD6nLVKsZkZN0CATUxU/LGt94S4sRWKe6fo1HEgaTVVFB8jDIx9QP3ZVkIoGFLLJm55F6TuCRWjyhm9vksfOf4xXXUhjAGDGGl+dye+o5CHfU96DQ6w8NS8rivBTt9ZGA1kw1n62o=
-    - secure: W1Ia4Nh3Ew4oLiK0Dg+vEtWI8ougq140AY7qpxE6A+3HAGBZlYEFHtzOCoga84qaobDdcC3U78/rHJRZ6zeO7wdbyzKVMD+o+Rq7bjLeT1eN0khmsJxTANnpBazusqDTpWKhtMeOe6cpLU27HaW3gINKfAoCXKP5ZQj9jg+6rhE=
+    - secure: bKQdWZw+dRDWm4A/9mnF8EizAgC6HXdM96TU3w4BtSN9BFAEqgC3bAi8sMWo8bDF6jktDcCxXZQcTqNQa4cw742M6WyU11rb0K1rtopmuifdDdM5hdAr7wX79gwe0uD91MG7Fw3GbYc/LDK2Or6mtX3oAPkQMwqfNwt4IEnZjuo=
+    - secure: i+TafxQJP1g96sWkckX/jAKq3ma9k1tFoMSs8CxXhnmadj3MFFVc0kzoZYzpvH1OYxxfnJOv++UcY+hSyiu51hV1QLnksz6xUFiW8CC49ItHxS6gRf9XaofJl3UAhzMTQ8U8eOpeFC4COAIeRo4Z8z/q2qZkd0eB+rAOZPO74mA=
 
 before_install:
   # get commit message
@@ -72,3 +72,4 @@ script:
 after_success:
   # if success then query and display all published binaries
   - node-pre-gyp info
+
