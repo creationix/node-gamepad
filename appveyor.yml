@@ -1,9 +1,9 @@
 # environment variables
 environment:
   node_pre_gyp_accessKeyId:
-    secure: hTQMi31kndQOPU0AZVkVXgH7Vc3EjJmvThFwMYhkno4=
+    secure: aSOwv7didRWblartyZgpyr622Ey1/3SgYFhp0r3YDp0=
   node_pre_gyp_secretAccessKey:
-    secure: ZOsWmB5rxfiPgPW5bCuvkK1UUEupssSoHfK5jWcJBJsPuPWQHEWOr1lUteVbx2NV
+    secure: od0SlCZXrCJXKTTgs3EXAZOBRxJShMd9wAW7Fya6I98JYgrp+tKBzKTqKgsZsLvq
 
 
 
