@@ -9,7 +9,7 @@ default:
 
 release:
 	@echo "Creating release commit"
-	@git commit -a -m "Release version $(VERSION) [publish binary]"
+	@git commit -a -m "Release version $(VERSION)"
 
 	@echo "Tagging release $(VERSION)"
 	@git tag -m "$(VERSION)" v$(VERSION)
