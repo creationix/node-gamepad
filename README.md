@@ -1,6 +1,8 @@
 node-gamepad
 ============
 
+https://travis-ci.org/creationix/node-gamepad.svg?branch=master
+
 Bindings for Alex Diener's cross-platform gamepad code
 
 The library is tiny and included inside this addon so you don't need any special libraries installed on your system like SDL.
