@@ -18,6 +18,7 @@
       ],
       'include_dirs': [
         './gamepad/source',
+        "<!(node -e \"require('nan')\")"
       ],
     },
     {
