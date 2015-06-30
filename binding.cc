@@ -1,118 +1,122 @@
 #include <node.h>
+#include <nan.h>
 #include <v8.h>
 #include "gamepad/Gamepad.h"
 
 using namespace v8;
 
-Persistent<Object> context_obj = Persistent<Object>::New(Object::New());
+Persistent<Object> persistentHandle;
 
-Handle<Value> nGamepad_init(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(nGamepad_init) {
+  NanScope();
   Gamepad_init();
-  return Undefined();
+  NanReturnUndefined();
 }
 
-Handle<Value> nGamepad_shutdown(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(nGamepad_shutdown) {
+  NanScope();
   Gamepad_shutdown();
-  return Undefined();
+  NanReturnUndefined();
 }
 
-Handle<Value> nGamepad_numDevices(const Arguments& args) {
-  HandleScope scope;
-  return Number::New(Gamepad_numDevices());
+NAN_METHOD(nGamepad_numDevices) {
+  NanScope();
+  NanReturnValue(NanNew<Number>(Gamepad_numDevices()));
 }
 
 Local<Object> nGamepad_toObject(Gamepad_device* device) {
-  Local<Object> obj = Object::New();
-  obj->Set(String::NewSymbol("deviceID"), Number::New(device->deviceID));
-  obj->Set(String::NewSymbol("description"), String::New(device->description));
-  obj->Set(String::NewSymbol("vendorID"), Number::New(device->vendorID));
-  obj->Set(String::NewSymbol("productID"), Number::New(device->productID));
-  Handle<Array> axes = Array::New(device->numAxes);
+  Local<Object> obj = NanNew<Object>();
+  obj->Set(NanNew("deviceID"), NanNew<Number>(device->deviceID));
+  obj->Set(NanNew("description"), NanNew<String>(device->description));
+  obj->Set(NanNew("vendorID"), NanNew<Number>(device->vendorID));
+  obj->Set(NanNew("productID"), NanNew<Number>(device->productID));
+  Handle<Array> axes = NanNew<Array>(device->numAxes);
   for (unsigned int i = 0; i < device->numAxes; i++) {
-    axes->Set(i, Number::New(device->axisStates[i]));
+    axes->Set(i, NanNew<Number>(device->axisStates[i]));
   }
-  obj->Set(String::NewSymbol("axisStates"), axes);
-  Handle<Array> buttons = Array::New(device->numButtons);
+  obj->Set(NanNew("axisStates"), axes);
+  Handle<Array> buttons = NanNew<Array>(device->numButtons);
   for (unsigned int i = 0; i < device->numButtons; i++) {
-    buttons->Set(i, Boolean::New(device->buttonStates[i]));
+    buttons->Set(i, NanNew<Boolean>(device->buttonStates[i]));
   }
-  obj->Set(String::NewSymbol("buttonStates"), buttons);
+  obj->Set(NanNew("buttonStates"), buttons);
   return obj;
 }
 
-Handle<Value> nGamepad_deviceAtIndex(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(nGamepad_deviceAtIndex) {
+  NanScope();
   int deviceIndex = args[0]->Int32Value();
   struct Gamepad_device* device = Gamepad_deviceAtIndex(deviceIndex);
-  if (!device) return Undefined();
-  return scope.Close(nGamepad_toObject(device));
+  if (!device) NanReturnUndefined();
+  NanReturnValue(nGamepad_toObject(device));
 }
 
-Handle<Value> nGamepad_detectDevices(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(nGamepad_detectDevices) {
+  NanScope();
   Gamepad_detectDevices();
-  return Undefined();
+  NanReturnUndefined();
 }
 
-Handle<Value> nGamepad_processEvents(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(nGamepad_processEvents) {
+  NanScope();
   Gamepad_processEvents();
-  return Undefined();
+  NanReturnUndefined();
 }
 
 void nGamepad_deviceAttach_cb(struct Gamepad_device* device, void* context) {
   Local<Value> args[] = {
-    String::NewSymbol("attach"),
-    Number::New(device->deviceID),
+    NanNew("attach"),
+    NanNew<Number>(device->deviceID),
     nGamepad_toObject(device),
   };
-  node::MakeCallback(context_obj, "on", 3, args);
+  NanMakeCallback(NanNew<Object>(persistentHandle), "on", 3, args);
 }
 
 void nGamepad_deviceRemove_cb(struct Gamepad_device* device, void* context) {
   Local<Value> args[] = {
-    String::NewSymbol("remove"),
-    Number::New(device->deviceID),
+    NanNew("remove"),
+    NanNew<Number>(device->deviceID),
   };
-  node::MakeCallback(context_obj, "on", 2, args);
+  NanMakeCallback(NanNew<Object>(persistentHandle), "on", 2, args);
 }
 
 void nGamepad_buttonDown_cb(struct Gamepad_device* device, unsigned int buttonID, double timestamp, void* context) {
   Local<Value> args[] = {
-    String::NewSymbol("down"),
-    Number::New(device->deviceID),
-    Number::New(buttonID),
-    Number::New(timestamp),
+    NanNew("down"),
+    NanNew<Number>(device->deviceID),
+    NanNew<Number>(buttonID),
+    NanNew<Number>(timestamp),
   };
-  node::MakeCallback(context_obj, "on", 4, args);
+  NanMakeCallback(NanNew<Object>(persistentHandle), "on", 4, args);
 }
 
 void nGamepad_buttonUp_cb(struct Gamepad_device* device, unsigned int buttonID, double timestamp, void* context) {
   Local<Value> args[] = {
-    String::NewSymbol("up"),
-    Number::New(device->deviceID),
-    Number::New(buttonID),
-    Number::New(timestamp),
+    NanNew("up"),
+    NanNew<Number>(device->deviceID),
+    NanNew<Number>(buttonID),
+    NanNew<Number>(timestamp),
   };
-  node::MakeCallback(context_obj, "on", 4, args);
+  NanMakeCallback(NanNew<Object>(persistentHandle), "on", 4, args);
 }
 
 void nGamepad_axisMove_cb(struct Gamepad_device* device, unsigned int axisID, float value, float lastValue, double timestamp, void * context) {
   Local<Value> args[] = {
-    String::NewSymbol("move"),
-    Number::New(device->deviceID),
-    Number::New(axisID),
-    Number::New(value),
-    Number::New(lastValue),
-    Number::New(timestamp),
+    NanNew("move"),
+    NanNew<Number>(device->deviceID),
+    NanNew<Number>(axisID),
+    NanNew<Number>(value),
+    NanNew<Number>(lastValue),
+    NanNew<Number>(timestamp),
   };
-  node::MakeCallback(context_obj, "on", 6, args);
+  NanMakeCallback(NanNew<Object>(persistentHandle), "on", 6, args);
 }
 
 void init(Handle<Object> target) {
-  target->Set(String::New("context"), context_obj, DontEnum);
+  Local<Object> handle = NanNew<Object>();
+  NanAssignPersistent(persistentHandle, handle);
+
+  target->Set(NanNew<String>("context"), handle);
 
   Gamepad_deviceAttachFunc(nGamepad_deviceAttach_cb, NULL);
   Gamepad_deviceRemoveFunc(nGamepad_deviceRemove_cb, NULL);
