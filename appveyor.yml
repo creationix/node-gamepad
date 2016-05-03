@@ -55,8 +55,8 @@ on_success:
   - cmd: IF %PUBLISH_BINARY%==true (npm install aws-sdk)
   - cmd: IF %PUBLISH_BINARY%==true (node-pre-gyp package 2>&1)
   - cmd: IF %PUBLISH_BINARY%==true (node-pre-gyp-github publish --release 2>&1)
-  - cmd: IF %PUBLISH_BINARY% == true (node-pre-gyp clean)
-  - cmd: IF %PUBLISH_BINARY% == true (npm install --fallback-to-build=false)
+  - cmd: IF %PUBLISH_BINARY%==true (node-pre-gyp clean)
+  - cmd: IF %PUBLISH_BINARY%==true (npm install --fallback-to-build=false)
 
 test: OFF
 
