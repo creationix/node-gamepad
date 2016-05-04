@@ -1,6 +1,6 @@
 {
   "name": "gamepad",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "node bindings to the Gamepad library",
   "author": "Tim Caswell <tim@creationix.com>",
   "license": "MIT",
@@ -24,8 +24,8 @@
     "install": "node-pre-gyp install --fallback-to-build"
   },
  "dependencies": {
-    "nan": "1.8.4",
-    "node-pre-gyp": "0.6.7"
+    "nan": "2.0.9",
+    "node-pre-gyp": "0.6.27"
   },
   "devDependencies": {
     "aws-sdk": "~2.1.36"
