@@ -4,12 +4,27 @@ language: objective-c
 env:
   matrix:
     - export NODE_VERSION="0.10"
+    - export NODE_VERSION="0.10" ARCH="x86"
     - export NODE_VERSION="0.12"
+    - export NODE_VERSION="0.12" ARCH="x86"
     - export NODE_VERSION="4"
+    - export NODE_VERSION="4" ARCH="x86"
     - export NODE_VERSION="5"
+    - export NODE_VERSION="5" ARCH="x86"
   global:
     - secure: bKQdWZw+dRDWm4A/9mnF8EizAgC6HXdM96TU3w4BtSN9BFAEqgC3bAi8sMWo8bDF6jktDcCxXZQcTqNQa4cw742M6WyU11rb0K1rtopmuifdDdM5hdAr7wX79gwe0uD91MG7Fw3GbYc/LDK2Or6mtX3oAPkQMwqfNwt4IEnZjuo=
     - secure: i+TafxQJP1g96sWkckX/jAKq3ma9k1tFoMSs8CxXhnmadj3MFFVc0kzoZYzpvH1OYxxfnJOv++UcY+hSyiu51hV1QLnksz6xUFiW8CC49ItHxS6gRf9XaofJl3UAhzMTQ8U8eOpeFC4COAIeRo4Z8z/q2qZkd0eB+rAOZPO74mA=
+
+matrix:
+  exclude:
+  - os: osx
+    env: NODE_VERSION="0.10" ARCH="x86"
+  - os: osx
+    env: NODE_VERSION="0.12" ARCH="x86"
+  - os: osx
+    env: NODE_VERSION="4" ARCH="x86"
+  - os: osx
+    env: NODE_VERSION="5" ARCH="x86"
 
 before_install:
   - git clone https://github.com/creationix/nvm.git ./.nvm
