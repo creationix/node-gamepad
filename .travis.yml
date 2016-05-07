@@ -60,7 +60,7 @@ script:
   # so here we use the 32 bit ones to also test 32 bit builds
   - NVER=`node -v`
   - wget http://nodejs.org/dist/${NVER}/node-${NVER}-${platform}-${ARCH}.tar.gz
-  - tar xf node-${NVER}-${platform}-x86.tar.gz
+  - tar xf node-${NVER}-${platform}-${ARCH}.tar.gz
   # enable 32 bit node
   - export PATH=$(pwd)/node-${NVER}-${platform}-${ARCH}/bin:$PATH
   # install 32 bit compiler toolchain and X11
@@ -69,7 +69,7 @@ script:
   - if [[ "$platform" == 'linux' ]]; then CC=gcc-4.6 CXX=g++-4.6 npm install --build-from-source; else npm install --build-from-source; fi
   - node gamepad
   # publish 32 bit build
-  - echo "Publishing x86 32bit Binary Package? ->" $PUBLISH_BINARY
+  - echo "Publishing Binary Package? ->" $PUBLISH_BINARY
   - if [[ $PUBLISH_BINARY == true ]]; then node-pre-gyp package publish; fi;
 
 after_success:
