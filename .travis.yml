@@ -59,10 +59,10 @@ script:
   # node v0.8 and above provide pre-built 32 bit and 64 bit binaries
   # so here we use the 32 bit ones to also test 32 bit builds
   - NVER=`node -v`
-  - wget http://nodejs.org/dist/${NVER}/node-${NVER}-${platform}-x86.tar.gz
+  - wget http://nodejs.org/dist/${NVER}/node-${NVER}-${platform}-${ARCH}.tar.gz
   - tar xf node-${NVER}-${platform}-x86.tar.gz
   # enable 32 bit node
-  - export PATH=$(pwd)/node-${NVER}-${platform}-x86/bin:$PATH
+  - export PATH=$(pwd)/node-${NVER}-${platform}-${ARCH}/bin:$PATH
   # install 32 bit compiler toolchain and X11
   - if [[ "$platform" == 'linux' ]]; then sudo apt-get -y install gcc-multilib g++-multilib; fi
   # test source compile in 32 bit mode with internal libsqlite3
