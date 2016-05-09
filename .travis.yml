@@ -3,7 +3,12 @@ language: objective-c
 
 env:
   matrix:
-    - export NODE_VERSION="0.10"
+    - export NODE_VERSION="0.10" ARCH="x86"
+    - export NODE_VERSION="0.10" ARCH="x64"
+    - export NODE_VERSION="0.12" ARCH="x86"
+    - export NODE_VERSION="0.12" ARCH="x64"
+    - export NODE_VERSION="4" ARCH="x64"
+    - export NODE_VERSION="5" ARCH="x64"
   global:
     - secure: bKQdWZw+dRDWm4A/9mnF8EizAgC6HXdM96TU3w4BtSN9BFAEqgC3bAi8sMWo8bDF6jktDcCxXZQcTqNQa4cw742M6WyU11rb0K1rtopmuifdDdM5hdAr7wX79gwe0uD91MG7Fw3GbYc/LDK2Or6mtX3oAPkQMwqfNwt4IEnZjuo=
     - secure: i+TafxQJP1g96sWkckX/jAKq3ma9k1tFoMSs8CxXhnmadj3MFFVc0kzoZYzpvH1OYxxfnJOv++UcY+hSyiu51hV1QLnksz6xUFiW8CC49ItHxS6gRf9XaofJl3UAhzMTQ8U8eOpeFC4COAIeRo4Z8z/q2qZkd0eB+rAOZPO74mA=
@@ -54,20 +59,19 @@ script:
   # node v0.8 and above provide pre-built 32 bit and 64 bit binaries
   # so here we use the 32 bit ones to also test 32 bit builds
   - NVER=`node -v`
-  - wget http://nodejs.org/dist/${NVER}/node-${NVER}-${platform}-x86.tar.gz
-  - tar xf node-${NVER}-${platform}-x86.tar.gz
+  - wget http://nodejs.org/dist/${NVER}/node-${NVER}-${platform}-${ARCH}.tar.gz
+  - tar xf node-${NVER}-${platform}-${ARCH}.tar.gz
   # enable 32 bit node
-  - export PATH=$(pwd)/node-${NVER}-${platform}-x86/bin:$PATH
+  - export PATH=$(pwd)/node-${NVER}-${platform}-${ARCH}/bin:$PATH
   # install 32 bit compiler toolchain and X11
   - if [[ "$platform" == 'linux' ]]; then sudo apt-get -y install gcc-multilib g++-multilib; fi
   # test source compile in 32 bit mode with internal libsqlite3
   - if [[ "$platform" == 'linux' ]]; then CC=gcc-4.6 CXX=g++-4.6 npm install --build-from-source; else npm install --build-from-source; fi
   - node gamepad
   # publish 32 bit build
-  - echo "Publishing x86 32bit Binary Package? ->" $PUBLISH_BINARY
+  - echo "Publishing Binary Package? ->" $PUBLISH_BINARY
   - if [[ $PUBLISH_BINARY == true ]]; then node-pre-gyp package publish; fi;
 
 after_success:
   # if success then query and display all published binaries
   - node-pre-gyp info
-
