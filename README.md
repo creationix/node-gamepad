@@ -110,3 +110,13 @@ event yet.
 
 Reads pending input from all attached devices and emits the appropriate events,
 if any have been registered.
+
+## Developing
+
+### Publishing a release
+
+This repository uses `prebuild` to create pre-built binaries (hosted on GitHub) for Windows, macOS, and Linux.
+
+To trigger a new release, simply push a new tag. The TravisCI and Appveyor build scripts will see that tag, and publish binaries for it.
+
+Once the builds have completed, the release can be published to npm via the normal command: `npm publish`. 

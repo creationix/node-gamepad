@@ -1,63 +1,62 @@
-
-os: unstable
-
-# Fix line endings on Windows
-init:
-  - git config --global core.autocrlf true
-
-# environment variables
 environment:
-  node_pre_gyp_accessKeyId:
-    secure: aSOwv7didRWblartyZgpyr622Ey1/3SgYFhp0r3YDp0=
-  node_pre_gyp_secretAccessKey:
-    secure: od0SlCZXrCJXKTTgs3EXAZOBRxJShMd9wAW7Fya6I98JYgrp+tKBzKTqKgsZsLvq
+  nodejs_version: "8"
+  prebuild_upload:
+    secure: hjViAyQNSlczp/ZOQ3UEhvQohKEtrkbEa3DJ1Zy7z2gTz4aFcoxARRlIqUFZMEnO
 
   matrix:
-  - nodejs_version: "0.10"
-  - nodejs_version: "0.12"
-  - nodejs_version: "4.4"
-  - nodejs_version: "5.11"
+  - nodejs_version: "4"
+  - nodejs_version: "6"
+  - binary_builder: "true"
+    nodejs_version: "8"
 
-# to add several platforms to build matrix:
 platform:
   - x86
   - x64
 
+cache:
+  - '%APPDATA%\npm'
+  - '%APPDATA%\npm-cache'
+
 install:
-  - cmd: ECHO "%nodejs_version%"
-  - cmd: ECHO "%platform%"
-  - cmd: ECHO "%APPVEYOR_REPO_COMMIT_MESSAGE%"
+- ps: Install-Product node $env:nodejs_version $env:platform
+- ps: >
+    @{
+      "nodejs_version" = $env:nodejs_version
+      "platform" = $env:platform
+      "node binary version" = $(node -v)
+      "node platform@arch" = $(node -p 'process.platform + process.arch')
+      "npm version" = $(npm -v)
+      "APPVEYOR_REPO_COMMIT_MESSAGE" = $env:APPVEYOR_REPO_COMMIT_MESSAGE
+      "git latest tag" = "$(git describe --tags --always HEAD)"
+      "appveyor_repo_tag" = $env:appveyor_repo_tag
+    } | Out-String | Write-Host;
+- npm install
 
-  - cmd: SET PATH=%cd%\node_modules\.bin\;%PATH%
-  - ps:  Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs_version) $env:platform
-  - cmd: IF %nodejs_version% LSS 1 npm -g install npm
-  - cmd: IF %nodejs_version% LSS 1 set PATH=%APPDATA%\npm;%PATH%
+# Check if we're building the latest tag, if so
+# then we publish the binaries if tests pass.
+- ps: >
+    if ($env:appveyor_repo_tag -match "true" -and ("$(git describe --tags --always HEAD)" -eq $env:appveyor_repo_tag_name)) {
+      $env:publish_binary = $env:binary_builder;
+    }
+    if ($env:publish_binary -eq "true") {
+      "We're publishing a binary!" | Write-Host
+    } else {
+      "We're not publishing a binary" | Write-Host
+    }
+    true;
 
-  - cmd: SET COMMIT_MSG="%APPVEYOR_REPO_COMMIT_MESSAGE%"
-  - cmd: SET PUBLISH_BINARY=false
-  # Check to verify the branch is the same than latest tag, if so
-  # then we publish the binaries if everything else is successful.
-  - cmd: git describe --tags --always HEAD > _git_tag.tmp
-  - cmd: SET /p GIT_TAG=<_git_tag.tmp
-  - cmd: ECHO %GIT_TAG%
-  - cmd: ECHO %APPVEYOR_REPO_BRANCH%
-  - cmd: DEL _git_tag.tmp
-  - cmd: IF x%APPVEYOR_REPO_BRANCH%==x%GIT_TAG% SET PUBLISH_BINARY=true
-  # Or look for commit message containing `[publish binary]`
-  - cmd: IF not x%COMMIT_MSG:[publish binary]=%==x%COMMIT_MSG% SET PUBLISH_BINARY=true
-  - cmd: ECHO %PUBLISH_BINARY%
-
-# to run your custom scripts instead of automatic MSBuild
 build_script:
-  - cmd: npm install --build-from-source --msvs_version=2013
+- npm install --build-from-source
 
-on_success:
-  - cmd: IF %PUBLISH_BINARY%==true (npm install aws-sdk)
-  - cmd: IF %PUBLISH_BINARY%==true (node-pre-gyp package 2>&1)
-  - cmd: IF %PUBLISH_BINARY%==true (node-pre-gyp publish 2>&1)
-  - cmd: IF %PUBLISH_BINARY%==true (node-pre-gyp clean)
-  - cmd: IF %PUBLISH_BINARY%==true (npm install --fallback-to-build=false)
+test_script:
+# Tests are disabled until we have tests which are suitable for CI and don't require manual interaction.
+# - npm test
+- echo "Skipping tests on CI, as they currently require manual interaction."
 
-test: OFF
+- ps: >
+    if ($env:publish_binary -eq "true") {
+      npm run prebuild
+    }
+    true;
 
 deploy: OFF
