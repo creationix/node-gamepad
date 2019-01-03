@@ -47,7 +47,7 @@ struct Gamepad_device {
 	int vendorID;
 	int productID;
 	
-	// Bust type and version as returned by driver
+	// Bus type and version as returned by driver
         int busType; 
         int version;
 	
