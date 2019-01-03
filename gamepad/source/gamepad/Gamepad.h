@@ -47,6 +47,10 @@ struct Gamepad_device {
 	int vendorID;
 	int productID;
 	
+	// Bust type and version as returned by driver
+        int busType; 
+        int version;
+	
 	// Number of axis elements belonging to the device
 	unsigned int numAxes;
 	
