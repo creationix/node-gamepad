@@ -349,8 +349,10 @@ void Gamepad_detectDevices() {
 				if (!ioctl(fd, EVIOCGID, &id)) {
 					deviceRecord->vendorID = id.vendor;
 					deviceRecord->productID = id.product;
+					deviceRecord->busType = id.bustype;
+					deviceRecord->version = id.version;
 				} else {
-					deviceRecord->vendorID = deviceRecord->productID = 0;
+					deviceRecord->version = deviceRecord->busType = deviceRecord->vendorID = deviceRecord->productID = 0;
 				}
 				
 				memset(evKeyBits, 0, sizeof(evKeyBits));

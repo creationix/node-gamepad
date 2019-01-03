@@ -30,6 +30,8 @@ Local<Object> nGamepad_toObject(Gamepad_device* device) {
   obj->Set(Nan::New("description").ToLocalChecked(), Nan::New<String>(device->description).ToLocalChecked());
   obj->Set(Nan::New("vendorID").ToLocalChecked(), Nan::New<Number>(device->vendorID));
   obj->Set(Nan::New("productID").ToLocalChecked(), Nan::New<Number>(device->productID));
+  obj->Set(Nan::New("busType").ToLocalChecked(), Nan::New<Number>(device->busType));
+  obj->Set(Nan::New("version").ToLocalChecked(), Nan::New<Number>(device->version));
   Handle<Array> axes = Nan::New<Array>(device->numAxes);
   for (unsigned int i = 0; i < device->numAxes; i++) {
     axes->Set(i, Nan::New<Number>(device->axisStates[i]));
