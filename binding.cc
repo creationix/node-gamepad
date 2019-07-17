@@ -46,7 +46,7 @@ Local<Object> nGamepad_toObject(Gamepad_device* device) {
 
 NAN_METHOD(nGamepad_deviceAtIndex) {
   Nan::HandleScope scope;
-  int deviceIndex = info[0]->Int32Value();
+  int deviceIndex = info[0].As<Int32>()->Value();
   struct Gamepad_device* device = Gamepad_deviceAtIndex(deviceIndex);
   if (!device) return;
   info.GetReturnValue().Set(nGamepad_toObject(device));
