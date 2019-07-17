@@ -29,6 +29,6 @@
     "prebuild-install": "^2.5.1"
   },
   "devDependencies": {
-    "prebuild": "^7.6.0"
+    "prebuild": "^9.0.1"
   }
 }
