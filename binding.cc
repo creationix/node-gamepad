@@ -6,6 +6,7 @@
 using namespace v8;
 
 Nan::Persistent<Object> persistentHandle;
+Nan::AsyncResource asyncResource("gamepad");
 
 NAN_METHOD(nGamepad_init) {
   Nan::HandleScope scope;
@@ -69,7 +70,7 @@ void nGamepad_deviceAttach_cb(struct Gamepad_device* device, void* context) {
     Nan::New<Number>(device->deviceID),
     nGamepad_toObject(device),
   };
-  Nan::MakeCallback(Nan::New<Object>(persistentHandle), "on", 3, info);
+  asyncResource.runInAsyncScope(Nan::New<Object>(persistentHandle), "on", 3, info);
 }
 
 void nGamepad_deviceRemove_cb(struct Gamepad_device* device, void* context) {
@@ -77,7 +78,7 @@ void nGamepad_deviceRemove_cb(struct Gamepad_device* device, void* context) {
     Nan::New("remove").ToLocalChecked(),
     Nan::New<Number>(device->deviceID),
   };
-  Nan::MakeCallback(Nan::New<Object>(persistentHandle), "on", 2, info);
+  asyncResource.runInAsyncScope(Nan::New<Object>(persistentHandle), "on", 2, info);
 }
 
 void nGamepad_buttonDown_cb(struct Gamepad_device* device, unsigned int buttonID, double timestamp, void* context) {
@@ -87,7 +88,7 @@ void nGamepad_buttonDown_cb(struct Gamepad_device* device, unsigned int buttonID
     Nan::New<Number>(buttonID),
     Nan::New<Number>(timestamp),
   };
-  Nan::MakeCallback(Nan::New<Object>(persistentHandle), "on", 4, info);
+  asyncResource.runInAsyncScope(Nan::New<Object>(persistentHandle), "on", 4, info);
 }
 
 void nGamepad_buttonUp_cb(struct Gamepad_device* device, unsigned int buttonID, double timestamp, void* context) {
@@ -97,7 +98,7 @@ void nGamepad_buttonUp_cb(struct Gamepad_device* device, unsigned int buttonID, 
     Nan::New<Number>(buttonID),
     Nan::New<Number>(timestamp),
   };
-  Nan::MakeCallback(Nan::New<Object>(persistentHandle), "on", 4, info);
+  asyncResource.runInAsyncScope(Nan::New<Object>(persistentHandle), "on", 4, info);
 }
 
 void nGamepad_axisMove_cb(struct Gamepad_device* device, unsigned int axisID, float value, float lastValue, double timestamp, void * context) {
@@ -109,7 +110,7 @@ void nGamepad_axisMove_cb(struct Gamepad_device* device, unsigned int axisID, fl
     Nan::New<Number>(lastValue),
     Nan::New<Number>(timestamp),
   };
-  Nan::MakeCallback(Nan::New<Object>(persistentHandle), "on", 6, info);
+  asyncResource.runInAsyncScope(Nan::New<Object>(persistentHandle), "on", 6, info);
 }
 
 void init(Handle<Object> target) {
