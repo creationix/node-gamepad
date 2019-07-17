@@ -31,12 +31,12 @@ Local<Object> nGamepad_toObject(Gamepad_device* device) {
   obj->Set(Nan::New("description").ToLocalChecked(), Nan::New<String>(device->description).ToLocalChecked());
   obj->Set(Nan::New("vendorID").ToLocalChecked(), Nan::New<Number>(device->vendorID));
   obj->Set(Nan::New("productID").ToLocalChecked(), Nan::New<Number>(device->productID));
-  Handle<Array> axes = Nan::New<Array>(device->numAxes);
+  Local<Array> axes = Nan::New<Array>(device->numAxes);
   for (unsigned int i = 0; i < device->numAxes; i++) {
     axes->Set(i, Nan::New<Number>(device->axisStates[i]));
   }
   obj->Set(Nan::New("axisStates").ToLocalChecked(), axes);
-  Handle<Array> buttons = Nan::New<Array>(device->numButtons);
+  Local<Array> buttons = Nan::New<Array>(device->numButtons);
   for (unsigned int i = 0; i < device->numButtons; i++) {
     buttons->Set(i, Nan::New<Boolean>(device->buttonStates[i]));
   }
@@ -113,7 +113,7 @@ void nGamepad_axisMove_cb(struct Gamepad_device* device, unsigned int axisID, fl
   asyncResource.runInAsyncScope(Nan::New<Object>(persistentHandle), "on", 6, info);
 }
 
-void init(Handle<Object> target) {
+void init(Local<Object> target) {
   Local<Object> handle = Nan::New<Object>();
   persistentHandle.Reset(handle);
 
