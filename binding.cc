@@ -27,20 +27,20 @@ NAN_METHOD(nGamepad_numDevices) {
 
 Local<Object> nGamepad_toObject(Gamepad_device* device) {
   Local<Object> obj = Nan::New<Object>();
-  obj->Set(Nan::New("deviceID").ToLocalChecked(), Nan::New<Number>(device->deviceID));
-  obj->Set(Nan::New("description").ToLocalChecked(), Nan::New<String>(device->description).ToLocalChecked());
-  obj->Set(Nan::New("vendorID").ToLocalChecked(), Nan::New<Number>(device->vendorID));
-  obj->Set(Nan::New("productID").ToLocalChecked(), Nan::New<Number>(device->productID));
+  Nan::Set(obj, Nan::New("deviceID").ToLocalChecked(), Nan::New<Number>(device->deviceID));
+  Nan::Set(obj, Nan::New("description").ToLocalChecked(), Nan::New<String>(device->description).ToLocalChecked());
+  Nan::Set(obj, Nan::New("vendorID").ToLocalChecked(), Nan::New<Number>(device->vendorID));
+  Nan::Set(obj, Nan::New("productID").ToLocalChecked(), Nan::New<Number>(device->productID));
   Local<Array> axes = Nan::New<Array>(device->numAxes);
   for (unsigned int i = 0; i < device->numAxes; i++) {
-    axes->Set(i, Nan::New<Number>(device->axisStates[i]));
+    Nan::Set(axes, i, Nan::New<Number>(device->axisStates[i]));
   }
-  obj->Set(Nan::New("axisStates").ToLocalChecked(), axes);
+  Nan::Set(obj, Nan::New("axisStates").ToLocalChecked(), axes);
   Local<Array> buttons = Nan::New<Array>(device->numButtons);
   for (unsigned int i = 0; i < device->numButtons; i++) {
-    buttons->Set(i, Nan::New<Boolean>(device->buttonStates[i]));
+    Nan::Set(buttons, i, Nan::New<Boolean>(device->buttonStates[i]));
   }
-  obj->Set(Nan::New("buttonStates").ToLocalChecked(), buttons);
+  Nan::Set(obj, Nan::New("buttonStates").ToLocalChecked(), buttons);
   return obj;
 }
 
@@ -117,7 +117,7 @@ void init(Local<Object> target) {
   Local<Object> handle = Nan::New<Object>();
   persistentHandle.Reset(handle);
 
-  target->Set(Nan::New<String>("context").ToLocalChecked(), handle);
+  Nan::Set(target, Nan::New<String>("context").ToLocalChecked(), handle);
 
   Gamepad_deviceAttachFunc(nGamepad_deviceAttach_cb, NULL);
   Gamepad_deviceRemoveFunc(nGamepad_deviceRemove_cb, NULL);
