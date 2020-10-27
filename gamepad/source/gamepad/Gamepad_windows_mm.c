@@ -183,7 +183,7 @@ void Gamepad_detectDevices() {
 			deviceRecord->numAxes = caps.wNumAxes + ((caps.wCaps & JOYCAPS_HASPOV) ? 2 : 0);
 			deviceRecord->numButtons = caps.wNumButtons;
 			deviceRecord->axisStates = calloc(sizeof(float), deviceRecord->numAxes);
-			deviceRecord->buttonStates = calloc(sizeof(bool), deviceRecord->numButtons);
+			deviceRecord->buttonStates = calloc(sizeof(true), deviceRecord->numButtons);
 			devices = realloc(devices, sizeof(struct Gamepad_device *) * (numDevices + 1));
 			devices[numDevices++] = deviceRecord;
 			
