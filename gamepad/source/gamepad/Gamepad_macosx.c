@@ -331,7 +331,7 @@ static void onDeviceMatched(void * context, IOReturn result, void * sender, IOHI
 	CFRelease(elements);
 	
 	deviceRecord->axisStates = calloc(sizeof(float), deviceRecord->numAxes);
-	deviceRecord->buttonStates = calloc(sizeof(bool), deviceRecord->numButtons);
+	deviceRecord->buttonStates = calloc(sizeof(true), deviceRecord->numButtons);
 	
 	IOHIDDeviceRegisterInputValueCallback(device, onDeviceValueChanged, deviceRecord);
 	

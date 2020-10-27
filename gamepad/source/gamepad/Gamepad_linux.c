@@ -378,7 +378,7 @@ void Gamepad_detectDevices() {
 				}
 				
 				deviceRecord->axisStates = calloc(sizeof(float), deviceRecord->numAxes);
-				deviceRecord->buttonStates = calloc(sizeof(bool), deviceRecord->numButtons);
+				deviceRecord->buttonStates = calloc(sizeof(true), deviceRecord->numButtons);
 				
 				if (Gamepad_deviceAttachCallback != NULL) {
 					Gamepad_deviceAttachCallback(deviceRecord, Gamepad_deviceAttachContext);
