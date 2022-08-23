@@ -4,7 +4,7 @@ node-gamepad
 [![Build Status](https://travis-ci.org/creationix/node-gamepad.svg?branch=master)](https://travis-ci.org/creationix/node-gamepad)
 [![Build status](https://ci.appveyor.com/api/projects/status/eumj8o5ubun88q8b/branch/master?svg=true)](https://ci.appveyor.com/project/creationix/node-gamepad/branch/master)
 
-forked to Push version of NAN and additonal prebuilts  to make it work on currenrt versions of Node.js again.
+## Forked to Push version of NAN and additonal prebuilts  to make it work on currenrt versions of Node.js again.
 
 Bindings for Alex Diener's cross-platform gamepad code
 
